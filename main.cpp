@@ -1,26 +1,24 @@
-#include <iostream>
+#include "mainwindow.h"
 
-using namespace std;
+#include <QApplication>
+#include <QLocale>
+#include <QTranslator>
 
-int main()
+int main(int argc, char *argv[])
 {
-    //декларації
-    float a, P;
+    QApplication a(argc, argv);
 
-    //введення
-    cout << "a = ";
-    cin >> a;
+    QTranslator translator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
+    for (const QString &locale : uiLanguages) {
+        const QString baseName = "lab11_v1_" + QLocale(locale).name();
+        if (translator.load(":/i18n/" + baseName)) {
+            a.installTranslator(&translator);
+            break;
+        }
+    }
 
-    //підрахунок
-    P = 4 * a;   //+ - * /
-
-    //виведення
-    cout << "P = " << P << endl;
-
-    //system("pause");
-    cout << "...";
-    cin.get();
-    cin.get();
-
-    return 0;
+    MainWindow w;
+    w.show();
+    return a.exec();
 }
